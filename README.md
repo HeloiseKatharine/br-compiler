@@ -2,9 +2,7 @@
 
 ## Tipos de dados
 * int
-* char
 * float
-* boolean
 
 ## Variáveis
 * int inteiro;
@@ -17,10 +15,6 @@
 ```
 // isso é um comentário 
 ```
-## Comando de atribuição
-```
-var = 1;
-```
 ## Expressões aritméticas
 * \+	adição
 * \-	subtração
@@ -31,15 +25,13 @@ var = 1;
 ```
 int num = 8;
 ```
-
+## Comando de atribuição
+```
+var = 1;
+```
 ## Saída de dados
 ```
 print('Olá, mundo!!');
-```
-
-## Funções 
-```
-nome_da_funcao(parâmetros){}
 ```
 
 ## if
