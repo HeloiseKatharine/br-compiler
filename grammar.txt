@@ -36,4 +36,4 @@ inum = [0-9]
 
 fnum = [0-9] .[0-9]
 
-assign (=)
+assign = agoraEh (=)
