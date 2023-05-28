@@ -43,7 +43,9 @@ Senão
 
 fimDoCondicionalSenao
 
+```
 ## Enquanto 
+
 ```
 Enquanto(parâmetros)
 
