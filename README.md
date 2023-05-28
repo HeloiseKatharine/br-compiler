@@ -23,7 +23,7 @@ var agoraEh 1;
 ```
 ## Saída de dados
 ```
-MostraNaTela('Olá, mundo!!');
+MostreNaTela('Olá, mundo!!');
 ```
 
 ## if
