@@ -1,0 +1,39 @@
+# grammar
+
+Program → Dcls Stmts fim($)
+
+Dcls → Dcl Dcls | vazio
+
+Dcl → floatdcl id | intdcl id
+
+Stmts → Stmt Stmts | vazio
+
+Stmt → id assign Val Expr | print id
+
+Expr → adição Val Expr | subtração Val Expr | multiplicação Val Expr | divisão Val Expr | vazio
+
+Val → id | inum | fnum
+
+---
+
+intdcl = crieUmInteiro
+
+floatdcl = crieUmRacional
+
+print = MostreNaTela
+
+adição = +
+
+subtração = -
+
+multiplicação = *
+
+divisão =  / 
+
+id = [a-z]
+
+inum = [0-9]
+
+fnum = [0-9] .[0-9]
+
+assign (=)
