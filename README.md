@@ -1,15 +1,12 @@
 # Compiladores
 
 ## Tipos de dados
-* int
-* float
+* Inteiro 
+* Racional
 
 ## Variáveis
-* int inteiro;
-* char b;
-* float 8.2;
-* boolean true;
-* boolean false;
+* crieUmInteiro a;
+* crieUmRacional e;
 
 ## Comentário
 ```
@@ -20,37 +17,36 @@
 * \-	subtração
 *	\* multiplicação
 * /	divisão
-
-## Entrada dos dados
-```
-int num = 8;
-```
 ## Comando de atribuição
 ```
-var = 1;
+var agoraEh 1;
 ```
 ## Saída de dados
 ```
-print('Olá, mundo!!');
+MostraNaTela('Olá, mundo!!');
 ```
 
 ## if
 ```
-if(parâmetros){}
+se (parâmetros)
+
+fimDoCondicionalSe
 ```
 
 ## if e else
 ```
-if(parâmetros){}
-else{}
+Se(parâmetros)
+
+fimDoCondicionalSe
+
+Senão
+
+fimDoCondicionalSenao
+
+## Enquanto 
+```
+Enquanto(parâmetros)
+
+FimDoEnquanto
 ```
 
-## for 
-```
-for(parâmetros){}
-```
-
-## while
-```
-while(parâmetros){}
-```
