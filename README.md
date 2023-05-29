@@ -30,12 +30,16 @@ MostreNaTela('Olá, mundo!!');
 ```
 se (parâmetros)
 
+entao()
+
 fimDoCondicionalSe
 ```
 
 ## if e else
 ```
 Se(parâmetros)
+
+entao()
 
 fimDoCondicionalSe
 
