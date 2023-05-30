@@ -4,7 +4,7 @@ Program → Dcls Stmts fim($)
 Dcls → Dcl Dcls | vazio
 Dcl → floatdcl id | intdcl id
 Stmts → Stmt Stmts | vazio
-Stmt → id assign Val Expr | print id | if Expr then Stmt StmtIf 
+Stmt → id assign Val Expr | print id | if Expr then Stmt StmtIf | while Expr do Stmt endwhile
 StmtIf → endif | else Stmt endif
 Expr → adição Val Expr | subtração Val Expr | multiplicação Val Expr | divisão Val Expr | vazio
 Val → id | inum | fnum
@@ -26,3 +26,6 @@ if = se
 then = entao
 endif = fimDoCondicional
 else = Senão
+while = Enquanto
+do = faca 
+endwhile = FimDoEnquanto

@@ -53,6 +53,8 @@ fimDoCondicionalSenao
 ```
 Enquanto(parâmetros)
 
+faca()
+
 FimDoEnquanto
 ```
 
