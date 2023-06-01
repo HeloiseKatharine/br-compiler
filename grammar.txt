@@ -9,7 +9,7 @@ StmtIf → endif | else Stmt endif
 Expr -> Expr1 Expr2
 Expr1 → adição Val Expr1 Expr2 | subtração  Val Expr1 Expr2 | vazio
 Expr2 -> multiplicação Val Expr2 | divisão Val Expr2 | Val Expr2 | vazio
-Val → id | inum | fnum
+Val → id | inum | fnum | (Expr)
 
 ---
 
