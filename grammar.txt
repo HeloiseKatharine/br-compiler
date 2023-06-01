@@ -6,7 +6,9 @@ Dcl → floatdcl id | intdcl id
 Stmts → Stmt Stmts | vazio
 Stmt → id assign Val Expr | print id | if Expr then Stmt StmtIf | while Expr do Stmt endwhile
 StmtIf → endif | else Stmt endif
-Expr → adição Val Expr | subtração Val Expr | multiplicação Val Expr | divisão Val Expr | vazio
+Expr -> Expr1 Expr2
+Expr1 → adição Val Expr1 Expr2 | subtração  Val Expr1 Expr2 | vazio
+Expr2 -> multiplicação Val Expr2 | divisão Val Expr2 | Val Expr2 | vazio
 Val → id | inum | fnum
 
 ---
@@ -29,3 +31,8 @@ else = Senão
 while = Enquanto
 do = faca 
 endwhile = FimDoEnquanto
+
+
+
+--- 
+ adição Val Expr | subtração Val Expr | vazio | multiplicação Val Expr | divisão Val Expr | 
