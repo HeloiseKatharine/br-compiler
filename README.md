@@ -7,11 +7,6 @@
 ## Variáveis
 * crieUmInteiro a;
 * crieUmRacional e;
-
-## Comentário
-```
-// isso é um comentário 
-```
 ## Expressões aritméticas
 * \+	adição
 * \-	subtração
@@ -19,7 +14,7 @@
 * /	divisão
 ## Comando de atribuição
 ```
-var agoraEh 1;
+var = 1;
 ```
 ## Saída de dados
 ```
