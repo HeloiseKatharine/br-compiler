@@ -28,6 +28,21 @@ Expr3 -> multiplicação Val Expr3 | divisão Val Expr3 | Val Expr3 | vazio
 Val → id | inum | fnum | num | (Expr) | string ?
 ---
 
+V.3
+
+Programa → Stmts fim($)
+Dcls → Dcl Dcls | vazio
+Dcl → floatdcl id | intdcl id
+Stmts → Stmt Stmts | vazio
+Stmt → id assign Expr | while (Expr) do Stmt endwhile | if (Expr) then Stmt StmtIf | print (Val)
+StmtIf → endif | else Stmt endif
+Expr -> Expr1 Expr2
+Expr1 -> Val Expr3
+Expr2 → adição Expr1 Expr2 | subtração Expr1 Expr2 | vazio
+Expr3 -> multiplicação Val Expr3 | divisão Val Expr3 | Val Expr3 | vazio
+Val → id | inum | fnum | num | (Expr) | string ?
+---
+
 intdcl = crieUmInteiro
 floatdcl = crieUmRacional
 print = MostreNaTela

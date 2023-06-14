@@ -42,9 +42,9 @@ def create_ac_grammar()->Grammar:
 
 
 regex_table = {
-    r'^f$': 'floatdcl',
-    r'^i$': 'intdcl',
-    r'^p$': 'print',
+    r'^crieUmInteiro$': 'floatdcl',
+    r'^crieUmRacional$': 'intdcl',
+    r'^mostreNaTela$': 'print',
     r'^[abcdeghjlmnoqrstuvwxyz]$' : 'id',
     r'^=$':'assign',
     r'^\+$': 'plus',
