@@ -245,9 +245,9 @@ def Fator(ts:token_sequence, p:predict_algorithm)->None:
     elif ts.peek() in p.predict(24):
         ts.match('fnum')
     elif ts.peek() in p.predict(25):
-        ts.match('abrepar')
+        ts.match('(')
         Expr(ts,p)
-        ts.match('fechapar')
+        ts.match(')')
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
