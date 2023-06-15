@@ -2,6 +2,7 @@ import re
 from grammar import Grammar
 from token_sequence import token_sequence
 from predict import predict_algorithm
+from ll1_check import is_ll1
 
 def create_ac_grammar()->Grammar:
     G = Grammar()
@@ -13,31 +14,39 @@ def create_ac_grammar()->Grammar:
     G.add_production('Dcl',['intdcl','id']) #5
     G.add_production('Stmts',['Stmt','Stmts']) #6
     G.add_production('Stmts',[]) #7
-    G.add_production('Stmt',['id','assign','Val','Expr']) #8
-    G.add_production('Stmt',['while','Expr','do','Stmt', 'endwhile']) #9
-    G.add_production('Stmt',['if','Expr','then','Stmt', 'StmtIf']) #10
+    G.add_production('Stmt',['id','assign','Expr']) #8
+    G.add_production('Stmt',['while','Expr','do','Stmt','Stmts', 'endwhile']) #9
+    G.add_production('Stmt',['if','Expr','then','Stmt','Stmts', 'StmtIf']) #10
     G.add_production('Stmt',['print','Expr']) #11
-    G.add_production('Stmt',[]) #12
-    G.add_production('StmtIf',['endif']) #13
-    G.add_production('StmtIf',['else','Stmt','endif']) #14
-    G.add_production('Expr',['Termo','Expr1']) #15
-    G.add_production('Expr1',['adicao','Termo','Expr1']) #16
-    G.add_production('Expr1',['subtracao','Termo','Expr1']) #17
-    G.add_production('Expr1',[]) #18
-    G.add_production('Termo',['Fator','Termo1']) #19
-    G.add_production('Termo1',['multiplicacao','Fator','Termo1']) #20
-    G.add_production('Termo1',['divisao','Fator','Termo1']) #21
-    G.add_production('Fator',['id']) #22
-    G.add_production('Fator',['inum']) #23
-    G.add_production('Fator',['fnum']) #24
-    G.add_production('Fator',['num']) #25
-    G.add_production('Fator',['(Expr)']) #26
-    G.add_production('Fator',['string']) #27
+    G.add_production('StmtIf',['endif']) #12
+    G.add_production('StmtIf',['else','Stmt','Stmts','endif']) #13
+    G.add_production('ExprLogica',['Expr','Comparador', 'Expr']) #14
+    G.add_production('Comparador',['maior','maiorIgual', 'menor', 'menorIgual', 'igual', 'diferente']) #15
+    G.add_production('Expr',['Termo','Expr1']) #16
+    G.add_production('Expr1',['adicao','Termo','Expr1']) #17
+    G.add_production('Expr1',['subtracao','Termo','Expr1']) #18
+    G.add_production('Expr1',[]) #19
+    G.add_production('Termo',['Fator','Termo1']) #20
+    G.add_production('Termo1',['multiplicacao','Fator','Termo1']) #21
+    G.add_production('Termo1',['divisao','Fator','Termo1']) #22
+    G.add_production('Termo1',[]) #23
+    G.add_production('Fator',['id']) #24
+    G.add_production('Fator',['inum']) #25
+    G.add_production('Fator',['fnum']) #26
+    G.add_production('Fator',['(','Expr',')']) #27
+
     
     G.add_terminal('floatdcl')
     G.add_terminal('intdcl')
     G.add_terminal('print')
     G.add_terminal('id')
+    G.add_terminal('if')
+    G.add_terminal('then')
+    G.add_terminal('endif')
+    G.add_terminal('else')
+    G.add_terminal('while')
+    G.add_terminal('do')
+    G.add_terminal('endwhile')
     G.add_terminal('assign')
     G.add_terminal('adicao')
     G.add_terminal('subtracao')
@@ -46,6 +55,14 @@ def create_ac_grammar()->Grammar:
     G.add_terminal('inum')
     G.add_terminal('fnum')
     G.add_terminal('fim')
+    G.add_terminal('(')
+    G.add_terminal(')')
+    G.add_terminal('maior')
+    G.add_terminal('maiorIgual')
+    G.add_terminal('menor')
+    G.add_terminal('menorIgual')
+    G.add_terminal('igual')
+    G.add_terminal('diferente')
 
     G.add_nonterminal('Programa')
     G.add_nonterminal('Dcls')
@@ -58,6 +75,8 @@ def create_ac_grammar()->Grammar:
     G.add_nonterminal('Termo')
     G.add_nonterminal('Termo1')
     G.add_nonterminal('Fator')
+    G.add_nonterminal('ExprLogica')
+    G.add_nonterminal('Comparador')
    
     return G 
 
@@ -81,6 +100,12 @@ regex_table = {
     r'^enquanto$': 'while',
     r'^faca$': 'do',
     r'^fimEnquanto$': 'endwhile',
+    r'^EhMaior$': 'maior',
+    r'^EhMaiorIgual$': 'maiorIgual',
+    r'^EhMenor$': 'menor',
+    r'^EhMenorIgual$': 'menorIgual',
+    r'^EhIgual$': 'igual',
+    r'^EhDiferente$': 'diferente'
 }
 
 def lexical_analyser(filepath) -> str:
@@ -216,7 +241,7 @@ def Fator(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(22):
         ts.match('id')
     elif ts.peek() in p.predict(23):
-        ts.match('num')
+        ts.match('inum')
     elif ts.peek() in p.predict(24):
         ts.match('fnum')
     elif ts.peek() in p.predict(25):
@@ -228,9 +253,9 @@ def Fator(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 if __name__ == '__main__':
-    filepath = 'programa.br'
-    tokens = lexical_analyser(filepath)
-    ts = token_sequence(tokens)
+    #filepath = 'programa.br'
+    #tokens = lexical_analyser(filepath)
+    #ts = token_sequence(tokens)
     G = create_ac_grammar()
     p_alg = predict_algorithm(G)
-    Prog(ts,p_alg)  
+    print(is_ll1(G,p_alg))

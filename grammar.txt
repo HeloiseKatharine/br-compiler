@@ -1,35 +1,5 @@
 # grammar
 
----
-V.1
-
-Program → Dcls Stmts fim($)
-Dcls → Dcl Dcls | vazio
-Dcl → floatdcl id | intdcl id
-Stmts → Stmt Stmts | vazio
-Stmt → id assign Val Expr | print id | if Expr then Stmt StmtIf | while Expr do Stmt endwhile
-StmtIf → endif | else Stmt endif
-Expr -> Expr1 Expr2
-Expr1 → adição Val Expr1 Expr2 | subtração  Val Expr1 Expr2 | vazio
-Expr2 -> multiplicação Val Expr2 | divisão Val Expr2 | Val Expr2 | vazio
-Val → id | inum | fnum | (Expr)
-
----
-V.2
-
-Programa → Stmts fim($)
-Stmts → Stmt Stmts | vazio
-Stmt → id assign Expr | while (Expr) do Stmt endwhile | if (Expr) then Stmt StmtIf | print (Val) | floatdcl id | intdcl id
-StmtIf → endif | else Stmt endif
-Expr -> Expr1 Expr2
-Expr1 -> Val Expr3
-Expr2 → adição Expr1 Expr2 | subtração Expr1 Expr2 | vazio
-Expr3 -> multiplicação Val Expr3 | divisão Val Expr3 | Val Expr3 | vazio
-Val → id | inum | fnum | num | (Expr) | string ?
----
-
-V.3
-
 Programa → Dcls Stmts fim
 Dcls → Dcl Dcls | vazio
 Dcl → floatdcl id | intdcl id
@@ -37,18 +7,19 @@ Stmts → Stmt Stmts | vazio
 Stmt → id assign Expr 
                         | while ( Expr ) do Stmt Stmts endwhile 
                         | if ( Expr ) then Stmt Stmts StmtIf 
-                        | print Expr | vazio
+                        | print Expr
+
 StmtIf → endif | else Stmt Stmts endif
 
 ExprLogica -> Expr Comparador Expr
 Comparador -> maior  | maiorIgual  |  menor  | menorIgual  | igual  | diferente
-
 Expr -> Termo Expr'
 Expr'-> vazio
 Expr'-> adicao Termo Expr'
 Expr'-> subtracao Termo Expr'
 Termo-> Fator Termo'
 Termo'-> multiplicacao Fator Termo' | vazio
+Termo'-> divisao Fator Termo' 
 Fator-> inum | id | fnum | ( Expr ) 
 
 ---

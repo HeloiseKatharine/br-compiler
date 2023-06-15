@@ -17,5 +17,5 @@ class predict_algorithm:
         ans = self.__first_alg.run(self.__G.rhs(p))
         if self.__rule_derives_empty[p]:
             A = self.__G.lhs(p)
-            ans = ans.union(self.__follow_alg.run(A))
+            ans.update(self.__follow_alg.run(A))
         return ans
