@@ -37,25 +37,23 @@ def create_ac_grammar()->Grammar:
     G.add_production('Stmt',['id','assign','Val','Expr'])
     G.add_production('Stmt',['while','Expr','do','Stmt', 'endwhile'])
     G.add_production('Stmt',['if','Expr','then','Stmt', 'StmtIf'])
-    G.add_production('Stmt',['print','id']) #?
-    
-    G.add_production('Expr',['Expr1','Expr2',]
-    )
-    G.add_production('Expr1',['Val','Expr3',]
-    )
-    G.add_production('Expr2',['adicao','Expr1','Expr2'])
-    G.add_production('Expr2',['subtracao','Expr1','Expr2'])
-    G.add_production('Expr2',[])
-    G.add_production('Expr3',['multiplicacao','Val','Expr3'])
-    G.add_production('Expr3',['divisao','Val','Expr3'])
-    G.add_production('Expr3',['Val','Expr3'])
-    G.add_production('Expr3',[])
-    G.add_production('Val',['id'])
-    G.add_production('Val',['inum'])
-    G.add_production('Val',['fnum'])
-    G.add_production('Val',['num'])#?
-    G.add_production('Val',['(Expr)'])
-    G.add_production('Val',['string'])#?
+    G.add_production('Stmt',['print','Expr'])
+    G.add_production('Stmt',[])
+    G.add_production('StmtIf',['endif'])
+    G.add_production('StmtIf',['else','Stmt','endif'])
+    G.add_production('Expr',['Termo','Expr1'])
+    G.add_production('Expr1',['adicao','Termo','Expr1'])
+    G.add_production('Expr1',['subtracao','Termo','Expr1'])
+    G.add_production('Expr1',[])
+    G.add_production('Termo',['Fator','Termo2'])
+    G.add_production('Termo2',['multiplicacao','Fator','Termo2'])
+    G.add_production('Termo2',['divisao','Fator','Termo2'])
+    G.add_production('Fator',['id'])
+    G.add_production('Fator',['inum'])
+    G.add_production('Fator',['fnum'])
+    G.add_production('Fator',['num'])#?
+    G.add_production('Fator',['(Expr)'])
+    G.add_production('Fator',['string'])#?
     G.add_terminal('fim')
     return G 
 
