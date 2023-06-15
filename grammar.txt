@@ -34,13 +34,23 @@ Programa → Dcls Stmts fim
 Dcls → Dcl Dcls | vazio
 Dcl → floatdcl id | intdcl id
 Stmts → Stmt Stmts | vazio
-Stmt → id assign Val Expr | while (Expr)? do Stmt endwhile | if (Expr)? then Stmt StmtIf | print (Val)? | vazio
-StmtIf → endif | else Stmt endif
-Expr -> Expr1 Expr2
+Stmt → id assign Val Expr 
+                        | while ( Expr ) do Stmt Stmts endwhile 
+                        | if ( Expr ) then Stmt Stmts StmtIf 
+                        | print Expr | vazio
+StmtIf → endif | else Stmt Stmts endif
+Expr -> Termo Expr'
+Expr'-> vazio
+Expr'-> adicao Termo Expr'
+Expr'-> subtracao Termo Expr'
+Termo-> Fator Termo'
+Termo'-> multiplicacao Fator Termo' | vazio
+Fator-> inum | id | fnum | ( Expr ) 
 Expr1 -> Val Expr3
 Expr2 → adicao Expr1 Expr2 | subtracao Expr1 Expr2 | vazio
 Expr3 -> multiplicacao Val Expr3 | divisao Val Expr3 | Val Expr3 | vazio
-Val → id | inum | fnum | num? | (Expr) | string ?
+Val → id | inum | fnum  | (Expr)
+
 ---
 
 intdcl = crieUmInteiro
@@ -50,14 +60,14 @@ adicao = +
 subtracao = -
 multiplicacao = *
 divisao =  / 
-id = [a-z]
-inum = [0-9]
-fnum = [0-9] .[0-9]
-assign = agoraEh (=) ?
+id = [a-z]+
+inum = [0-9]+
+fnum = [0-9]+.[0-9]+
+assign = agoraEh
 if = se
 then = entao
-endif = fimDoCondicional
-else = Senao
-while = Enquanto
+endif = fimSe
+else = senao
+while = enquanto
 do = faca
-endwhile = FimDoEnquanto
+endwhile = fimEnquanto
