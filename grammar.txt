@@ -39,6 +39,7 @@ Stmt → id assign Expr
                         | if ( Expr ) then Stmt Stmts StmtIf 
                         | print Expr | vazio
 StmtIf → endif | else Stmt Stmts endif
+Operador -> maior Expr | maiorIgual Expr |  menor Expr | menorIgual Expr | igual Expr | diferente Expr 
 Expr -> Termo Expr'
 Expr'-> vazio
 Expr'-> adicao Termo Expr'
@@ -67,3 +68,9 @@ else = senao
 while = enquanto
 do = faca
 endwhile = fimEnquanto
+maior = EhMaior
+maiorIgual = EhMaiorIgual 
+menor = EhMenor 
+menorIgual = EhMenorIgual 
+igual = EhIgual 
+diferente = EhDiferente 
