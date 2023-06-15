@@ -10,34 +10,53 @@ def create_ac_grammar()->Grammar:
     G.add_terminal('print')
     G.add_terminal('id')
     G.add_terminal('assign')
-    G.add_terminal('plus')
-    G.add_terminal('minus')
+    G.add_terminal('adicao')
+    G.add_terminal('subtracao')
+    G.add_terminal('multiplicacao')
+    G.add_terminal('divisao')
     G.add_terminal('inum')
     G.add_terminal('fnum')
-    G.add_nonterminal('Prog')
+    G.add_nonterminal('Programa')
     G.add_nonterminal('Dcls')
     G.add_nonterminal('Dcl')
     G.add_nonterminal('Stmts')
     G.add_nonterminal('Stmt')
+    G.add_nonterminal('StmtIf')
     G.add_nonterminal('Expr')
+    G.add_nonterminal('Expr1')
+    G.add_nonterminal('Expr2')
+    G.add_nonterminal('Expr3')
     G.add_nonterminal('Val')
-    G.add_production('Prog',['Dcls','Stmts','$']) # 16
-    G.add_production('Dcls',['Dcl','Dcls']) # 17
-    G.add_production('Dcls',[]) # 18
-    G.add_production('Dcl',['floatdcl','id']) # 19
-    G.add_production('Dcl',['intdcl','id']) # 20
-    G.add_production('Stmts',['Stmt','Stmts']) # 21
-    G.add_production('Stmts',[]) # 22
-    G.add_production('Stmt',['id','assign','Val','Expr']) # 23
-    G.add_production('Stmt',['print','id']) # 24
-    G.add_production('Expr',['plus','Val','Expr']) # 25
-    G.add_production('Expr',['minus','Val','Expr']) # 26
-    G.add_production('Expr',[]) # 27
-    G.add_production('Val',['id']) # 28
-    G.add_production('Val',['inum']) # 29
-    G.add_production('Val',['fnum']) # 30
-    G.add_terminal('$')
-
+    G.add_production('Programa',['Dcls','Stmts','fim'])
+    G.add_production('Dcls',['Dcl','Dcls']) 
+    G.add_production('Dcls',[])
+    G.add_production('Dcl',['floatdcl','id'])
+    G.add_production('Dcl',['intdcl','id'])
+    G.add_production('Stmts',['Stmt','Stmts'])
+    G.add_production('Stmts',[])
+    G.add_production('Stmt',['id','assign','Val','Expr'])
+    G.add_production('Stmt',['while','Expr','do','Stmt', 'endwhile'])
+    G.add_production('Stmt',['if','Expr','then','Stmt', 'StmtIf'])
+    G.add_production('Stmt',['print','id']) #?
+    
+    G.add_production('Expr',['Expr1','Expr2',]
+    )
+    G.add_production('Expr1',['Val','Expr3',]
+    )
+    G.add_production('Expr2',['adicao','Expr1','Expr2'])
+    G.add_production('Expr2',['subtracao','Expr1','Expr2'])
+    G.add_production('Expr2',[])
+    G.add_production('Expr3',['multiplicacao','Val','Expr3'])
+    G.add_production('Expr3',['divisao','Val','Expr3'])
+    G.add_production('Expr3',['Val','Expr3'])
+    G.add_production('Expr3',[])
+    G.add_production('Val',['id'])
+    G.add_production('Val',['inum'])
+    G.add_production('Val',['fnum'])
+    G.add_production('Val',['num'])#?
+    G.add_production('Val',['(Expr)'])
+    G.add_production('Val',['string'])#?
+    G.add_terminal('fim')
     return G 
 
 
@@ -47,10 +66,19 @@ regex_table = {
     r'^mostreNaTela$': 'print',
     r'^[abcdeghjlmnoqrstuvwxyz]$' : 'id',
     r'^=$':'assign',
-    r'^\+$': 'plus',
-    r'^\-$': 'minus',
+    r'^\+$': 'adicao',
+    r'^\-$': 'subtracao',
+    r'^\*$': 'multiplicacao',
+    r'^\/$': 'divisao',
     r'^[0-9]+$': 'inum',
-    r'^[0-9]+\.[0-9]+$': 'fnum'
+    r'^[0-9]+\.[0-9]+$': 'fnum',
+    r'^se$': 'se',
+    r'^entao': 'then',
+    r'^fimDoCondicional': 'endif',
+    r'^Senao': 'else',
+    r'^Enquanto': 'while',
+    r'^faca': 'do',
+    r'^FimDoEnquanto': 'endwhile',
 }
 
 def lexical_analyser(filepath) -> str:
