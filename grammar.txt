@@ -39,8 +39,10 @@ Stmt → id assign Expr
                         | if ( Expr ) then Stmt Stmts StmtIf 
                         | print Expr | vazio
 StmtIf → endif | else Stmt Stmts endif
-Expr -> Termo Operador
-Operador -> maior Expr | maiorIgual Expr |  menor Expr | menorIgual Expr | igual Expr | diferente Expr 
+
+ExprLogica -> Expr Comparador Expr
+Comparador -> maior  | maiorIgual  |  menor  | menorIgual  | igual  | diferente
+
 Expr -> Termo Expr'
 Expr'-> vazio
 Expr'-> adicao Termo Expr'
