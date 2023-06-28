@@ -7,7 +7,7 @@ from ll1_check import is_ll1
 def create_ac_grammar()->Grammar:
     G = Grammar()
  
-    G.add_production('Programa',['Dcls','Stmts','fim']) #1
+    G.add_production('Programa',['Dcls','Stmts']) #1
     G.add_production('Dcls',['Dcl','Dcls']) #2
     G.add_production('Dcls',[]) #3
     G.add_production('Dcl',['floatdcl','id']) #4
@@ -58,7 +58,6 @@ def create_ac_grammar()->Grammar:
     G.add_terminal('divisao')
     G.add_terminal('inum')
     G.add_terminal('fnum')
-    G.add_terminal('fim')
     G.add_terminal('(')
     G.add_terminal(')')
     G.add_terminal('maior')
@@ -112,7 +111,6 @@ regex_table = {
     r'^EhDiferente$': 'diferente',
     r'^\($':'(',
     r'^\)$':')',
-    r'^fim$':'fim'
 
 }
 
@@ -138,7 +136,6 @@ def Prog(ts:token_sequence,p:predict_algorithm)->None:
     if ts.peek() in p.predict(1):
         Dcls(ts,p)
         Stmts(ts,p)
-        ts.match('fim')
 
 def Dcls(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(2):
