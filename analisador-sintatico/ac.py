@@ -94,7 +94,7 @@ regex_table = {
     r'^\-$': 'subtracao',
     r'^\*$': 'multiplicacao',
     r'^\/$': 'divisao',
-    r'^[a-z]$' : 'id',
+    r'^[a-z]+$' : 'id',
     r'^[0-9]+$': 'inum',
     r'^[0-9]+\.[0-9]+$': 'fnum',
     r'^se$': 'if',
@@ -109,7 +109,11 @@ regex_table = {
     r'^EhMenor$': 'menor',
     r'^EhMenorIgual$': 'menorIgual',
     r'^EhIgual$': 'igual',
-    r'^EhDiferente$': 'diferente'
+    r'^EhDiferente$': 'diferente',
+    r'^\($':'(',
+    r'^\)$':')',
+    r'^fim$':'fim'
+
 }
 
 def lexical_analyser(filepath) -> str:
@@ -289,4 +293,4 @@ if __name__ == '__main__':
     G = create_ac_grammar()
     p_alg = predict_algorithm(G)
     #print(is_ll1(G,p_alg))
-    Program(ts,p_alg)
+    Prog(ts,p_alg)

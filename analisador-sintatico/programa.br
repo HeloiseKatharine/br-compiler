@@ -1,4 +1,4 @@
-crieUmInteiro inteiro 
+crieUmInteiro var
 inteiro agoraEh 2
-2 EhIgual 2
-
+2 EhIgual 2 
+fim
