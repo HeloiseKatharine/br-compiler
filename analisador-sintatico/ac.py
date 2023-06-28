@@ -86,8 +86,8 @@ def create_ac_grammar()->Grammar:
 
 
 regex_table = {
-    r'^crieUmInteiro$': 'floatdcl',
-    r'^crieUmRacional$': 'intdcl',
+    r'^crieUmInteiro$': 'intdcl',
+    r'^crieUmRacional$': 'floatdcl',
     r'^mostreNaTela$': 'print',
     r'^agoraEh$':'assign',
     r'^\+$': 'adicao',
@@ -284,8 +284,9 @@ def Fator(ts:token_sequence, p:predict_algorithm)->None:
 
 if __name__ == '__main__':
     filepath = 'programa.br'
-    #tokens = lexical_analyser(filepath)
-    #ts = token_sequence(tokens)
+    tokens = lexical_analyser(filepath)
+    ts = token_sequence(tokens)
     G = create_ac_grammar()
     p_alg = predict_algorithm(G)
-    print(is_ll1(G,p_alg))
+    #print(is_ll1(G,p_alg))
+    Program(ts,p_alg)
