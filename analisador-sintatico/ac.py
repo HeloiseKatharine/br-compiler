@@ -146,6 +146,9 @@ def Prog(ts:token_sequence,p:predict_algorithm)->None:
         Dcls(ts,p)
         Stmts(ts,p)
         ts.match('$')
+    else:
+        print('Syntax error: ',ts.peek())
+        exit(0)
 
 def Dcls(ts:token_sequence, p:predict_algorithm)->None:
     print('Dcls',ts.peek())
@@ -154,6 +157,10 @@ def Dcls(ts:token_sequence, p:predict_algorithm)->None:
         Dcls(ts,p)
     elif ts.peek() in p.predict(2):
         return
+    else:
+        print('Syntax error: ',ts.peek())
+        exit(0)
+
     
 def Dcl(ts:token_sequence, p:predict_algorithm)->None:
     print('Dcl',ts.peek())
@@ -174,6 +181,9 @@ def Stmts(ts:token_sequence, p:predict_algorithm)->None:
         Stmts(ts,p)
     elif ts.peek() in p.predict(6):
         return
+    else:
+        print('Syntax error: ',ts.peek())
+        exit(0)
 
 def Stmt(ts:token_sequence, p:predict_algorithm)->None:
     print('Stmt',ts.peek())
@@ -201,6 +211,7 @@ def Stmt(ts:token_sequence, p:predict_algorithm)->None:
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
+
 def StmtIf(ts:token_sequence, p:predict_algorithm)->None:
     print('Stmtif',ts.peek())
     expected = p.predict(11)
@@ -223,7 +234,7 @@ def ExprLogica(ts:token_sequence, p:predict_algorithm)->None:
         Comparador(ts,p)
         Expr(ts,p)
     else:
-        print('Syntax error: ',ts.peek())
+        print('Syntax errorrr: ',ts.peek())
         exit(0)
 
 def Comparador(ts:token_sequence, p:predict_algorithm)->None:
@@ -306,6 +317,9 @@ def Fator(ts:token_sequence, p:predict_algorithm)->None:
         ts.match('(')
         Expr(ts,p)
         ts.match(')')
+    else:
+        print('Syntax error: ',ts.peek())
+        exit(0)
 
 if __name__ == '__main__':
     filepath = 'programa.br'
