@@ -1,3 +1,8 @@
-crieUmInteiro var
-var EhIgual 2
-2 EhIgual 2
+CrieUmInteiro var
+CrieUmRacional variavel
+var AgoraEh  2 + 5
+Se var EhIgual 5 Entao
+    MostreNaTela var
+    FimSe
+
+

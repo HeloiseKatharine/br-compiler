@@ -7,7 +7,7 @@ from ll1_check import is_ll1
 def create_ac_grammar()->Grammar:
     G = Grammar()
  
-    G.add_production('Programa',['Dcls','Stmts']) #1
+    G.add_production('Programa',['Dcls','Stmts','$']) #1
     G.add_production('Dcls',['Dcl','Dcls']) #2
     G.add_production('Dcls',[]) #3
     G.add_production('Dcl',['floatdcl','id']) #4
@@ -15,7 +15,7 @@ def create_ac_grammar()->Grammar:
     G.add_production('Stmts',['Stmt','Stmts']) #6
     G.add_production('Stmts',[]) #7
     G.add_production('Stmt',['id','assign','Expr']) #8
-    G.add_production('Stmt',['while','Expr','do','Stmt','Stmts', 'endwhile']) #9
+    G.add_production('Stmt',['while','ExprLogica','do','Stmt','Stmts', 'endwhile']) #9
     G.add_production('Stmt',['if','Expr','then','Stmt','Stmts', 'StmtIf']) #10
     G.add_production('Stmt',['print','Expr']) #11
     G.add_production('StmtIf',['endif']) #12
@@ -66,6 +66,7 @@ def create_ac_grammar()->Grammar:
     G.add_terminal('menorIgual')
     G.add_terminal('igual')
     G.add_terminal('diferente')
+    G.add_terminal('$')
 
     G.add_nonterminal('Programa')
     G.add_nonterminal('Dcls')
@@ -80,15 +81,29 @@ def create_ac_grammar()->Grammar:
     G.add_nonterminal('Fator')
     G.add_nonterminal('ExprLogica')
     G.add_nonterminal('Comparador')
-   
+    # for p in G.productions():
+    #     print(p,G.lhs(p),'->',G.rhs(p))
     return G 
 
 
 regex_table = {
-    r'^crieUmInteiro$': 'intdcl',
-    r'^crieUmRacional$': 'floatdcl',
-    r'^mostreNaTela$': 'print',
-    r'^agoraEh$':'assign',
+    r'^CrieUmInteiro$': 'intdcl',
+    r'^CrieUmRacional$': 'floatdcl',
+    r'^MostreNaTela$': 'print',
+    r'^AgoraEh$':'assign',
+    r'^Se$': 'if',
+    r'^Entao$': 'then',
+    r'^FimSe$': 'endif',
+    r'^Senao$': 'else',
+    r'^Enquanto$': 'while',
+    r'^Faca$': 'do',
+    r'^FimEnquanto$': 'endwhile',
+    r'^EhMaior$': 'maior',
+    r'^EhMaiorIgual$': 'maiorIgual',
+    r'^EhMenor$': 'menor',
+    r'^EhMenorIgual$': 'menorIgual',
+    r'^EhIgual$': 'igual',
+    r'^EhDiferente$': 'diferente',
     r'^\+$': 'adicao',
     r'^\-$': 'subtracao',
     r'^\*$': 'multiplicacao',
@@ -96,19 +111,6 @@ regex_table = {
     r'^[a-z]+$' : 'id',
     r'^[0-9]+$': 'inum',
     r'^[0-9]+\.[0-9]+$': 'fnum',
-    r'^se$': 'if',
-    r'^entao$': 'then',
-    r'^fimSe$': 'endif',
-    r'^senao$': 'else',
-    r'^enquanto$': 'while',
-    r'^faca$': 'do',
-    r'^fimEnquanto$': 'endwhile',
-    r'^EhMaior$': 'maior',
-    r'^EhMaiorIgual$': 'maiorIgual',
-    r'^EhMenor$': 'menor',
-    r'^EhMenorIgual$': 'menorIgual',
-    r'^EhIgual$': 'igual',
-    r'^EhDiferente$': 'diferente',
     r'^\($':'(',
     r'^\)$':')',
 
@@ -119,7 +121,12 @@ def lexical_analyser(filepath) -> str:
         token_sequence = []
         tokens = []
         for line in f:
-            tokens = tokens + line.split(' ')
+            line = line.strip()
+            for t in line.split(' '):
+                if t != '':
+                    tokens.append(t)
+                
+        print(tokens)
         for t in tokens:
             found = False
             for regex,category in regex_table.items():
@@ -130,25 +137,27 @@ def lexical_analyser(filepath) -> str:
                 print('Lexical error: ',t)
                 exit(0)
     token_sequence.append('$')
+    print(token_sequence)
     return token_sequence
 
 def Prog(ts:token_sequence,p:predict_algorithm)->None:
-    if ts.peek() in p.predict(1):
+    if ts.peek() in p.predict(0):
         Dcls(ts,p)
         Stmts(ts,p)
+        ts.match('$')
 
 def Dcls(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(2):
+    if ts.peek() in p.predict(1):
         Dcl(ts,p)
         Dcls(ts,p)
-    elif ts.peek() in p.predict(3):
+    elif ts.peek() in p.predict(2):
         return
     
 def Dcl(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(4):
+    if ts.peek() in p.predict(3):
         ts.match('floatdcl')
         ts.match('id')
-    elif ts.peek() in p.predict(5):
+    elif ts.peek() in p.predict(4):
         ts.match('intdcl')
         ts.match('id')
     else:
@@ -156,41 +165,41 @@ def Dcl(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Stmts(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(6):
+    if ts.peek() in p.predict(5):
         Stmt(ts,p)
         Stmts(ts,p)
-    elif ts.peek() in p.predict(7):
+    elif ts.peek() in p.predict(6):
         return
 
 def Stmt(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(8):
+    if ts.peek() in p.predict(7):
         ts.match('id')
         ts.match('assign')
         Expr(ts,p)
-    elif ts.peek() in p.predict(9):
+    elif ts.peek() in p.predict(8):
         ts.match('while')
         Expr(ts,p)
         ts.match('do')
         Stmt(ts,p)
         Stmts(ts,p)
         ts.match('endwhile')
-    elif ts.peek() in p.predict(10):
+    elif ts.peek() in p.predict(9):
         ts.match('if')
         Expr(ts,p)
         ts.match('then')
         Stmt(ts,p)
         Stmts(ts,p)
         StmtIf(ts,p)
-    elif ts.peek() in p.predict(11):
+    elif ts.peek() in p.predict(10):
         ts.match('print')
         Expr(ts,p)
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
 def StmtIf(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(12):
+    if ts.peek() in p.predict(11):
         ts.match('endif')
-    elif ts.peek() in p.predict(13):
+    elif ts.peek() in p.predict(12):
         ts.match('else')
         Stmt(ts,p)
         Stmts(ts,p)
@@ -200,7 +209,7 @@ def StmtIf(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def ExprLogica(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(14):
+    if ts.peek() in p.predict(13):
         Expr(ts,p)
         Comparador(ts,p)
         Expr(ts,p)
@@ -209,24 +218,24 @@ def ExprLogica(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Comparador(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(15):
+    if ts.peek() in p.predict(14):
         ts.match('maior')
-    elif ts.peek() in p.predict(16):
+    elif ts.peek() in p.predict(15):
         ts.match('maiorIgual')
-    elif ts.peek() in p.predict(17):
+    elif ts.peek() in p.predict(16):
         ts.match('menor')
-    elif ts.peek() in p.predict(18):
+    elif ts.peek() in p.predict(17):
         ts.match('menorIgual')
-    elif ts.peek() in p.predict(19):
+    elif ts.peek() in p.predict(18):
         ts.match('igual')
-    elif ts.peek() in p.predict(20):
+    elif ts.peek() in p.predict(19):
         ts.match('diferente')
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
 
 def Expr(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(21):
+    if ts.peek() in p.predict(20):
         Termo(ts,p)
         Expr1(ts,p)
     else:
@@ -234,22 +243,22 @@ def Expr(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Expr1(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(22):
+    if ts.peek() in p.predict(21):
         ts.match('adicao')
         Termo(ts,p)
         Expr1(ts,p)
-    elif ts.peek() in p.predict(23):
+    elif ts.peek() in p.predict(22):
         ts.match('subtracao'    )
         Termo(ts,p)
         Expr1(ts,p)
-    elif ts.peek() in p.predict(24):
+    elif ts.peek() in p.predict(23):
         return
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
 
 def Termo(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(25):
+    if ts.peek() in p.predict(24):
         Fator(ts,p)
         Termo1(ts,p)
     else:
@@ -257,28 +266,28 @@ def Termo(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Termo1(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(26):
+    if ts.peek() in p.predict(25):
         ts.match('multiplicacao')
         Fator(ts,p)
         Termo1(ts,p)
-    elif ts.peek() in p.predict(27):
+    elif ts.peek() in p.predict(26):
         ts.match('divisao')
         Fator(ts,p)
         Termo1(ts,p)
-    elif ts.peek() in p.predict(28):
+    elif ts.peek() in p.predict(27):
         return
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
 
 def Fator(ts:token_sequence, p:predict_algorithm)->None:
-    if ts.peek() in p.predict(29):
+    if ts.peek() in p.predict(28):
         ts.match('id')
-    elif ts.peek() in p.predict(30):
+    elif ts.peek() in p.predict(29):
         ts.match('inum')
-    elif ts.peek() in p.predict(31):
+    elif ts.peek() in p.predict(30):
         ts.match('fnum')
-    elif ts.peek() in p.predict(32):
+    elif ts.peek() in p.predict(31):
         ts.match('(')
         Expr(ts,p)
         ts.match(')')
