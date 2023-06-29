@@ -39,7 +39,7 @@ def create_ac_grammar()->Grammar:
     G.add_production('Fator',['inum']) #29
     G.add_production('Fator',['fnum']) #30
     G.add_production('Fator',['(','Expr',')']) #31
-    
+ 
     G.add_terminal('floatdcl')
     G.add_terminal('intdcl')
     G.add_terminal('print')
@@ -192,7 +192,7 @@ def Stmt(ts:token_sequence, p:predict_algorithm)->None:
         Expr(ts,p)
     elif ts.peek() in p.predict(8):
         ts.match('while')
-        ExprLogicar(ts,p)
+        ExprLogica(ts,p)
         ts.match('do')
         Stmt(ts,p)
         Stmts(ts,p)

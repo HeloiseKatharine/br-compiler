@@ -1,8 +1,14 @@
 CrieUmInteiro var
 CrieUmRacional variavel
 var AgoraEh  2 + 5
-Se var EhMaior 5 Entao
+Se var EhMenor 5 Entao
     MostreNaTela var
     FimSe
+
+Enquanto i EhMenor 5 Faca
+    MostreNaTela i
+    i AgoraEh i + ( 2 / 2 )
+    FimEnquanto
+
 
 
