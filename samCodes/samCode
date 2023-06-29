@@ -1,0 +1,7 @@
+read a
+read b
+if (a + b < 5)
+	x = a+b;
+else
+	x = a-b
+	
