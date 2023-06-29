@@ -7,38 +7,38 @@ from ll1_check import is_ll1
 def create_ac_grammar()->Grammar:
     G = Grammar()
  
-    G.add_production('Programa',['Dcls','Stmts','$']) #1
-    G.add_production('Dcls',['Dcl','Dcls']) #2
-    G.add_production('Dcls',[]) #3
-    G.add_production('Dcl',['floatdcl','id']) #4
-    G.add_production('Dcl',['intdcl','id']) #5
-    G.add_production('Stmts',['Stmt','Stmts']) #6
-    G.add_production('Stmts',[]) #7
-    G.add_production('Stmt',['id','assign','Expr']) #8
-    G.add_production('Stmt',['while','ExprLogica','do','Stmt','Stmts', 'endwhile']) #9
-    G.add_production('Stmt',['if','ExprLogica','then','Stmt','Stmts', 'StmtIf']) #10
-    G.add_production('Stmt',['print','Expr']) #11
-    G.add_production('StmtIf',['endif']) #12
-    G.add_production('StmtIf',['else','Stmt','Stmts','endif']) #13
-    G.add_production('ExprLogica',['Expr','Comparador', 'Expr']) #14
-    G.add_production('Comparador',['maior']) #15
-    G.add_production('Comparador',['maiorIgual']) #16
-    G.add_production('Comparador',['menor']) #17
-    G.add_production('Comparador',['menorIgual']) #18
-    G.add_production('Comparador',['igual']) #19
-    G.add_production('Comparador',['diferente']) #20
-    G.add_production('Expr',['Termo','Expr1']) #21
-    G.add_production('Expr1',['adicao','Termo','Expr1']) #22
-    G.add_production('Expr1',['subtracao','Termo','Expr1']) #23
-    G.add_production('Expr1',[]) #24
-    G.add_production('Termo',['Fator','Termo1']) #25
-    G.add_production('Termo1',['multiplicacao','Fator','Termo1']) #26
-    G.add_production('Termo1',['divisao','Fator','Termo1']) #27
-    G.add_production('Termo1',[]) #28
-    G.add_production('Fator',['id']) #29
-    G.add_production('Fator',['inum']) #30
-    G.add_production('Fator',['fnum']) #31
-    G.add_production('Fator',['(','Expr',')']) #32
+    G.add_production('Programa',['Dcls','Stmts','$']) #0
+    G.add_production('Dcls',['Dcl','Dcls']) #1
+    G.add_production('Dcls',[]) #2
+    G.add_production('Dcl',['floatdcl','id']) #3
+    G.add_production('Dcl',['intdcl','id']) #4
+    G.add_production('Stmts',['Stmt','Stmts']) #5
+    G.add_production('Stmts',[]) #6
+    G.add_production('Stmt',['id','assign','Expr']) #7
+    G.add_production('Stmt',['while','ExprLogica','do','Stmt','Stmts', 'endwhile']) #8
+    G.add_production('Stmt',['if','ExprLogica','then','Stmt','Stmts', 'StmtIf']) #9
+    G.add_production('Stmt',['print','Expr']) #10
+    G.add_production('StmtIf',['endif']) #11
+    G.add_production('StmtIf',['else','Stmt','Stmts','endif']) #12
+    G.add_production('ExprLogica',['Expr','Comparador', 'Expr']) #13
+    G.add_production('Comparador',['maior']) #14
+    G.add_production('Comparador',['maiorIgual']) #15
+    G.add_production('Comparador',['menor']) #16
+    G.add_production('Comparador',['menorIgual']) #17
+    G.add_production('Comparador',['igual']) #18
+    G.add_production('Comparador',['diferente']) #19
+    G.add_production('Expr',['Termo','Expr1']) #20
+    G.add_production('Expr1',['adicao','Termo','Expr1']) #21
+    G.add_production('Expr1',['subtracao','Termo','Expr1']) #22
+    G.add_production('Expr1',[]) #23
+    G.add_production('Termo',['Fator','Termo1']) #24
+    G.add_production('Termo1',['multiplicacao','Fator','Termo1']) #25
+    G.add_production('Termo1',['divisao','Fator','Termo1']) #26
+    G.add_production('Termo1',[]) #27
+    G.add_production('Fator',['id']) #28
+    G.add_production('Fator',['inum']) #29
+    G.add_production('Fator',['fnum']) #30
+    G.add_production('Fator',['(','Expr',')']) #31
     
     G.add_terminal('floatdcl')
     G.add_terminal('intdcl')
@@ -113,7 +113,6 @@ regex_table = {
     r'^[0-9]+\.[0-9]+$': 'fnum',
     r'^\($':'(',
     r'^\)$':')',
-
 }
 
 def lexical_analyser(filepath) -> str:
