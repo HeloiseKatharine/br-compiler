@@ -3,6 +3,7 @@ from grammar import Grammar
 from token_sequence import token_sequence
 from predict import predict_algorithm
 from ll1_check import is_ll1
+from transpiler import transpiler
 
 def create_ac_grammar()->Grammar:
     G = Grammar()
@@ -140,7 +141,6 @@ def lexical_analyser(filepath) -> str:
     return token_sequence
 
 def Prog(ts:token_sequence,p:predict_algorithm)->None:
-    print('Prog',ts.peek())
     if ts.peek() in p.predict(0):
         Dcls(ts,p)
         Stmts(ts,p)
@@ -150,7 +150,6 @@ def Prog(ts:token_sequence,p:predict_algorithm)->None:
         exit(0)
 
 def Dcls(ts:token_sequence, p:predict_algorithm)->None:
-    print('Dcls',ts.peek())
     if ts.peek() in p.predict(1):
         Dcl(ts,p)
         Dcls(ts,p)
@@ -162,7 +161,6 @@ def Dcls(ts:token_sequence, p:predict_algorithm)->None:
 
     
 def Dcl(ts:token_sequence, p:predict_algorithm)->None:
-    print('Dcl',ts.peek())
     if ts.peek() in p.predict(3):
         ts.match('floatdcl')
         ts.match('id')
@@ -174,7 +172,6 @@ def Dcl(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Stmts(ts:token_sequence, p:predict_algorithm)->None:
-    print('Stmts',ts.peek())
     if ts.peek() in p.predict(5):
         Stmt(ts,p)
         Stmts(ts,p)
@@ -185,7 +182,6 @@ def Stmts(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Stmt(ts:token_sequence, p:predict_algorithm)->None:
-    print('Stmt',ts.peek())
     if ts.peek() in p.predict(7):
         ts.match('id')
         ts.match('assign')
@@ -212,7 +208,6 @@ def Stmt(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def StmtIf(ts:token_sequence, p:predict_algorithm)->None:
-    print('Stmtif',ts.peek())
     expected = p.predict(11)
     expected.update(p.predict(12))
     if ts.peek() in p.predict(11):
@@ -227,7 +222,6 @@ def StmtIf(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def ExprLogica(ts:token_sequence, p:predict_algorithm)->None:
-    print('ExprLogica',ts.peek())
     if ts.peek() in p.predict(13):
         Expr(ts,p)
         Comparador(ts,p)
@@ -237,7 +231,6 @@ def ExprLogica(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Comparador(ts:token_sequence, p:predict_algorithm)->None:
-    print('Comparador',ts.peek())
     if ts.peek() in p.predict(14):
         ts.match('maior')
     elif ts.peek() in p.predict(15):
@@ -255,7 +248,6 @@ def Comparador(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Expr(ts:token_sequence, p:predict_algorithm)->None:
-    print('Expr',ts.peek())
     if ts.peek() in p.predict(20):
         Termo(ts,p)
         Expr1(ts,p)
@@ -264,7 +256,6 @@ def Expr(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Expr1(ts:token_sequence, p:predict_algorithm)->None:
-    print('Expr1',ts.peek())
     if ts.peek() in p.predict(21):
         ts.match('adicao')
         Termo(ts,p)
@@ -280,7 +271,6 @@ def Expr1(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Termo(ts:token_sequence, p:predict_algorithm)->None:
-    print('Termo',ts.peek())
     if ts.peek() in p.predict(24):
         Fator(ts,p)
         Termo1(ts,p)
@@ -289,7 +279,6 @@ def Termo(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Termo1(ts:token_sequence, p:predict_algorithm)->None:
-    print('Termo1',ts.peek())
     if ts.peek() in p.predict(25):
         ts.match('multiplicacao')
         Fator(ts,p)
@@ -305,7 +294,6 @@ def Termo1(ts:token_sequence, p:predict_algorithm)->None:
         exit(0)
 
 def Fator(ts:token_sequence, p:predict_algorithm)->None:
-    print('Fator',ts.peek())
     if ts.peek() in p.predict(28):
         ts.match('id')
     elif ts.peek() in p.predict(29):

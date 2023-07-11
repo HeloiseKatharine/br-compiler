@@ -8,6 +8,9 @@ Se var EhMenor 5 Entao
 Enquanto i EhMenor 5 Faca
     MostreNaTela i
     i AgoraEh i + ( 2 / 2 )
+    Se var EhMenor 5 Entao
+        i AgoraEh 9 + 1
+    FimSe
     FimEnquanto
 
 
