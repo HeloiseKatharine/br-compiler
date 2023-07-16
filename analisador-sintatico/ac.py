@@ -3,7 +3,9 @@ from grammar import Grammar
 from token_sequence import token_sequence
 from predict import predict_algorithm
 from ll1_check import is_ll1
-from transpiler import transpiler
+from  transpiler.transpiler import Transpiler
+
+transpiler = Transpiler()
 
 def create_ac_grammar()->Grammar:
     G = Grammar()
@@ -127,11 +129,12 @@ def lexical_analyser(filepath) -> str:
                     tokens.append(t)
                 
         print(tokens)
+
         for t in tokens:
             found = False
             for regex,category in regex_table.items():
                 if re.match(regex,t):
-                    token_sequence.append(category)
+                    token_sequence.append((category,t))
                     found=True
             if not found:
                 print('Lexical error: ',t)
@@ -140,11 +143,13 @@ def lexical_analyser(filepath) -> str:
     print(token_sequence)
     return token_sequence
 
+
 def Prog(ts:token_sequence,p:predict_algorithm)->None:
     if ts.peek() in p.predict(0):
         Dcls(ts,p)
         Stmts(ts,p)
         ts.match('$')
+        transpiler.print_code()
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
@@ -163,9 +168,15 @@ def Dcls(ts:token_sequence, p:predict_algorithm)->None:
 def Dcl(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(3):
         ts.match('floatdcl')
+        var_name = ts.get_value()
+        transpiler.insert_symbol_table(var_name,'float',transpiler.free_address())
+        transpiler.emit_code('PUSHIMM 0.0')
         ts.match('id')
     elif ts.peek() in p.predict(4):
         ts.match('intdcl')
+        var_name = ts.get_value()
+        transpiler.insert_symbol_table(var_name,'int',transpiler.free_address())
+        transpiler.emit_code('PUSHIMM 0')
         ts.match('id')
     else:
         print('Syntax error: ',ts.peek())
@@ -183,9 +194,11 @@ def Stmts(ts:token_sequence, p:predict_algorithm)->None:
 
 def Stmt(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(7):
+        var_name = ts.get_value()
         ts.match('id')
         ts.match('assign')
         Expr(ts,p)
+        transpiler.emit_code('STOREOFF '+transpiler.get_address(var_name))
     elif ts.peek() in p.predict(8):
         ts.match('while')
         ExprLogica(ts,p)
@@ -281,8 +294,10 @@ def Termo(ts:token_sequence, p:predict_algorithm)->None:
 def Termo1(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(25):
         ts.match('multiplicacao')
+        
         Fator(ts,p)
         Termo1(ts,p)
+        transpiler.emit_code('TIMES')
     elif ts.peek() in p.predict(26):
         ts.match('divisao')
         Fator(ts,p)
@@ -295,8 +310,11 @@ def Termo1(ts:token_sequence, p:predict_algorithm)->None:
 
 def Fator(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(28):
+        var_name = ts.get_value()
+        transpiler.emit_code('PUSHOFF '+transpiler.get_address(var_name))
         ts.match('id')
     elif ts.peek() in p.predict(29):
+        transpiler.emit_code('PUSHIMM '+ts.get_value())
         ts.match('inum')
     elif ts.peek() in p.predict(30):
         ts.match('fnum')
