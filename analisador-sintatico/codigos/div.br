@@ -5,3 +5,4 @@ CrieUmInteiro res
 varr AgoraEh  3
 var AgoraEh  4
 res AgoraEh varr / var
+MostreNaTela res

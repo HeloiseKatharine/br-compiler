@@ -23,7 +23,7 @@ def create_ac_grammar()->Grammar:
     G.add_production('Stmt',['print','Expr']) #10
     G.add_production('StmtIf',['endif']) #11
     G.add_production('StmtIf',['else','Stmt','Stmts','endif']) #12
-    G.add_production('ExprLogica',['Expr','Comparador', 'Expr']) #13
+    G.add_production('ExprLogica',['NaoExprLogica','Expr','Comparador', 'Expr']) #13
     G.add_production('Comparador',['maior']) #14
     G.add_production('Comparador',['maiorIgual']) #15
     G.add_production('Comparador',['menor']) #16
@@ -42,6 +42,10 @@ def create_ac_grammar()->Grammar:
     G.add_production('Fator',['inum']) #29
     G.add_production('Fator',['fnum']) #30
     G.add_production('Fator',['(','Expr',')']) #31
+    G.add_production('NaoExprLogica',['not']) #32
+    G.add_production('NaoExprLogica',[]) #33
+    G.add_production('Comparador',['and']) #34
+    G.add_production('Comparador',['or'])  #3
  
     G.add_terminal('floatdcl')
     G.add_terminal('intdcl')
@@ -70,6 +74,9 @@ def create_ac_grammar()->Grammar:
     G.add_terminal('igual')
     G.add_terminal('diferente')
     G.add_terminal('$')
+    G.add_terminal('not')
+    G.add_terminal('and')
+    G.add_terminal('or')
 
     G.add_nonterminal('Programa')
     G.add_nonterminal('Dcls')
@@ -84,12 +91,16 @@ def create_ac_grammar()->Grammar:
     G.add_nonterminal('Fator')
     G.add_nonterminal('ExprLogica')
     G.add_nonterminal('Comparador')
+    G.add_nonterminal('NaoExprLogica')
     # for p in G.productions():
     #     print(p,G.lhs(p),'->',G.rhs(p))
     return G 
 
 
 regex_table = {
+    r'^Nao$':'not',
+    r'^E$':'and',
+    r'^Ou$':'or',
     r'^CrieUmInteiro$': 'intdcl',
     r'^CrieUmRacional$': 'floatdcl',
     r'^MostreNaTela$': 'print',
@@ -128,8 +139,6 @@ def lexical_analyser(filepath) -> str:
                 if t != '':
                     tokens.append(t)
                 
-        print(tokens)
-
         for t in tokens:
             found = False
             for regex,category in regex_table.items():
@@ -140,7 +149,6 @@ def lexical_analyser(filepath) -> str:
                 print('Lexical error: ',t)
                 exit(0)
     token_sequence.append('$')
-    print(token_sequence)
     return token_sequence
 
 
@@ -149,6 +157,7 @@ def Prog(ts:token_sequence,p:predict_algorithm)->None:
         Dcls(ts,p)
         Stmts(ts,p)
         ts.match('$')
+        transpiler.emit_code('STOP')
         transpiler.print_code()
     else:
         print('Syntax error: ',ts.peek())
@@ -216,6 +225,7 @@ def Stmt(ts:token_sequence, p:predict_algorithm)->None:
     elif ts.peek() in p.predict(10):
         ts.match('print')
         Expr(ts,p)
+        transpiler.emit_code('WRITE')
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
@@ -236,26 +246,53 @@ def StmtIf(ts:token_sequence, p:predict_algorithm)->None:
 
 def ExprLogica(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(13):
+        NaoExprLogica(ts,p)
+
         Expr(ts,p)
         Comparador(ts,p)
         Expr(ts,p)
     else:
-        print('Syntax errorrr: ',ts.peek())
+        print('Syntax error: ',ts.peek())
+        exit(0)
+
+def NaoExprLogica(ts:token_sequence, p:predict_algorithm)->None:
+    if ts.peek() in p.predict(32):
+        ts.match('not')
+        transpiler.emit_code('NOT')
+    elif ts.peek() in p.predict(33):
+        return
+    else:
+        print('Syntax error: ',ts.peek())
         exit(0)
 
 def Comparador(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(14):
         ts.match('maior')
+        transpiler.emit_code('GREATER')
     elif ts.peek() in p.predict(15):
         ts.match('maiorIgual')
+        transpiler.emit_code('LESS')
+        transpiler.emit_code('NOT') 
     elif ts.peek() in p.predict(16):
         ts.match('menor')
+        transpiler.emit_code('LESS')
     elif ts.peek() in p.predict(17):
         ts.match('menorIgual')
+        transpiler().emit_code('GREATER')
+        transpiler.emit_code('NOT')
     elif ts.peek() in p.predict(18):
         ts.match('igual')
+        transpiler.emit_code('EQUAL')
     elif ts.peek() in p.predict(19):
         ts.match('diferente')
+        transpiler.emit_code('EQUAL')
+        transpiler.emit_code('NOT')
+    elif ts.peek() in p.predict(34):
+        ts.match('and')
+        transpiler.emit_code('BITAND')
+    elif ts.peek() in p.predict(35):
+        ts.match('or')
+        transpiler.emit_code('BITOR')
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
@@ -264,6 +301,8 @@ def Expr(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(20):
         Termo(ts,p)
         Expr1(ts,p)
+    elif ts.peek() in p.predict(23):
+        return
     else:
         print('Syntax error: ',ts.peek())
         exit(0)
@@ -272,10 +311,12 @@ def Expr1(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(21):
         ts.match('adicao')
         Termo(ts,p)
+        transpiler.emit_code('ADD')
         Expr1(ts,p)
     elif ts.peek() in p.predict(22):
-        ts.match('subtracao'    )
+        ts.match('subtracao')
         Termo(ts,p)
+        transpiler.emit_code('SUB')
         Expr1(ts,p)
     elif ts.peek() in p.predict(23):
         return
@@ -294,13 +335,13 @@ def Termo(ts:token_sequence, p:predict_algorithm)->None:
 def Termo1(ts:token_sequence, p:predict_algorithm)->None:
     if ts.peek() in p.predict(25):
         ts.match('multiplicacao')
-        
         Fator(ts,p)
-        Termo1(ts,p)
         transpiler.emit_code('TIMES')
+        Termo1(ts,p)
     elif ts.peek() in p.predict(26):
         ts.match('divisao')
         Fator(ts,p)
+        transpiler.emit_code('DIV')
         Termo1(ts,p)
     elif ts.peek() in p.predict(27):
         return
@@ -326,12 +367,14 @@ def Fator(ts:token_sequence, p:predict_algorithm)->None:
         print('Syntax error: ',ts.peek())
         exit(0)
 
+
+
 if __name__ == '__main__':
     # filepath = 'programa.br'
-    filepath = './codigos/while.br'
+    filepath = './codigos/if.br'
     tokens = lexical_analyser(filepath)
     ts = token_sequence(tokens)
     G = create_ac_grammar()
     p_alg = predict_algorithm(G)
-    #print(is_ll1(G,p_alg))
+    # print(is_ll1(G,p_alg))
     Prog(ts,p_alg)

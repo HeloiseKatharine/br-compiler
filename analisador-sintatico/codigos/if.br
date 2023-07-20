@@ -1,7 +1,6 @@
 CrieUmInteiro var
 
-Se 8 EhMaior 5
-    Entao
+Se 8 EhMaior 5  Entao
         var AgoraEh 1
         MostreNaTela var
 FimSe

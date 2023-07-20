@@ -1,5 +1,5 @@
 CrieUmInteiro var
-CrieUmRacional variavel
+CrieUmInteiro i
 var AgoraEh  2 + 5
 Se var EhMenor 5 Entao
     MostreNaTela var
