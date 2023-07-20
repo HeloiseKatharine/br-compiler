@@ -1,0 +1,8 @@
+CrieUmInteiro var
+var AgoraEh  4
+
+Enquanto var EhMenorIgual 5
+    Faca
+        var AgoraEh 6
+        MostreNaTela var
+FimEnquanto

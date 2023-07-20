@@ -1,0 +1,10 @@
+CrieUmInteiro var
+
+Se 8 EhMaior 5
+    Entao
+        var AgoraEh 1
+        MostreNaTela var
+    Senao
+        var AgoraEh 0
+        MostreNaTela var
+FimSe
